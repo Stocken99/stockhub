@@ -1,4 +1,4 @@
-# Stock Movement Prediction
+# Price Movement Prediction of Financial Assets
 
 ## Authors Group Members
 | Name             | GitHub Username  | 
