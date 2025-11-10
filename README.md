@@ -1,10 +1,10 @@
-# Stock Price Prediction
+# Stock Movement Prediction
 
 ## Authors Group Members
 | Name             | GitHub Username  | 
 | ---------------- | ---------------- | 
 | Mohamad Alkhaled | Mohamadalkhaled  | 
-| Felix Stockinger | *(add username)* | 
+| Felix Stockinger | Stocken99        | 
 | Lukas Ydkvist    | *(add username)* | 
 
 ## 1. Motivation / Introduction
