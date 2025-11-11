@@ -25,7 +25,7 @@ Cronos-2 model: [amazon/chronos-2 · Hugging Face](https://huggingface.co/amazon
 
 We are planning to use the API provided by Alpha Vantage to collect our datasets. The main data we will utilize from this site is the time series of different stocks with a daily granularity with the corresponding technical indicators provided such as SMA, RSI, with others. The other main type of data we will fetch from this site is the news of different stocks.
 
-[Alpha Vantage Demo Dataset](https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&apikey=demo)
+https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&apikey=demo
 
 The above is an example of a query to fetch the daily time series data for the IDM stock with the demo API-key.
 
