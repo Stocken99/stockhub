@@ -27,7 +27,7 @@ We are planning to use the API provided by Alpha Vantage to collect our datasets
 
 https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&apikey=demo
 
-The above is an example of a query to fetch the daily time series data for the IDM stock with the demo API-key.
+The above is an example of a query to fetch the daily time series data for the IBM stock with the demo API-key.
 
 
 [Alpha Vantage Documentation](https://www.alphavantage.co/documentation/)
