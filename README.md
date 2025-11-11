@@ -23,11 +23,11 @@ We will use two different kinds of models, an LSTM and Cronos-2 model. An LSTM i
 Cronos-2 model: [amazon/chronos-2 · Hugging Face](https://huggingface.co/amazon/chronos-2)
 ## 3. Dataset
 
+We are planning to use the API provided by Alpha Vantage to collect our datasets. The main data we will utilize from this site is the time series of different stocks with a daily granularity with the corresponding technical indicators provided such as SMA, RSI, with others. The other main type of data we will fetch from this site is the news of different stocks.
 
-[ ] Student group of 3 members created and communicated to Teachers 
-[ ] GitHub: repository created, team members set in .gitconfig and shared with Teachers
-GitHub accounts: Lucy Ellen (llwaka) and Tobias (Tubbias)
-[ ] GitHub: README.md added with project proposal description using proper formats e.g., chapter headings etc
-[ ] README.md: Add project motiviation/introduction ( The real-world problem being tackled )
-[ ] README.md: Add project pre-trained model/method (Existing AI/ML models or algortithms planned to be used and improved)
-[ ] README.md: Add project dataset (dataset planned to be used, links/collection mechanisms)
+[Alpha Vantage Demo Dataset](https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&apikey=demo)
+
+The above is an example of a query to fetch the daily time series data for the IDM stock with the demo API-key.
+
+
+[Alpha Vantage Documentation](https://www.alphavantage.co/documentation/)
