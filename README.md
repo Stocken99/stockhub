@@ -13,7 +13,7 @@
 ## 2. Pre-trained Model / Method
 We will use two different kinds of models, an LSTM and Cronos-2 model. An LSTM is a type of recurrent neural network or RNN designed to mitigate the vanishing gradient problem. The main advantage of the LSTM is the low requirements of computing power to train it. The Cronos-2 model is a state-of-the-art 120M-parameter, encoder-only time series foundation model specialized for zero-shot forecasting. It is a pre-trained model trained on a combination of real-world and synthetic data. The model used in the final product will be the one that achieves the highest result during the development of the application.
 
-Cronos-2 model: amazon/chronos-2 · Hugging Face
+Cronos-2 model: [amazon/chronos-2 · Hugging Face](https://huggingface.co/amazon/chronos-2)
 ## 3. Dataset
 
 
