@@ -5,7 +5,7 @@
 | ---------------- | ---------------- | 
 | Mohamad Alkhaled | Mohamadalkhaled  | 
 | Felix Stockinger | Stocken99        | 
-| Lukas Ydkvist    | *(add username)* | 
+| Lukas Ydkvist    | Lukasydkvist | 
 
 ## 1. Motivation / Introduction
 
