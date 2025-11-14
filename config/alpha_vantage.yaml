@@ -1,0 +1,46 @@
+alpha_vantage:
+  api_key: "91FK4Q8GJJ4DUD8W" 
+  base_url: "https://www.alphavantage.co/query"
+
+  functions:
+    TIME_SERIES_DAILY:
+      params:
+        function: "TIME_SERIES_DAILY"
+        symbol: "{ticker}"
+        outputsize: "full"
+
+    NEWS_SENTIMENT:
+      params:
+        function: "NEWS_SENTIMENT"
+        tickers: "{ticker}"
+        time_from: "{time_from}"
+        time_to: "{time_to}"
+
+    SMA:
+      params:
+        function: "SMA"
+        symbol: "{ticker}"
+        interval: "daily"
+        time_period: 14
+        series_type: "close"
+
+    RSI:
+      params:
+        function: "RSI"
+        symbol: "{ticker}"
+        interval: "daily"
+        time_period: 14
+        series_type: "close"
+
+    BBANDS:
+      params:
+        function: "BBANDS"
+        symbol: "{ticker}"
+        interval: "daily"
+        time_period: 20
+        series_type: "close"
+
+    OBV:
+      params:
+        function: "OBV"
+        symbol: "{ticker}"
