@@ -1,0 +1,11 @@
+ticker: "AAPL"
+
+paths:
+  time_series_daily: "data/raw/TIME_SERIES_DAILY.json"
+  news: "data/raw/NEWS_SENTIMENT.json"
+  sma: "data/raw/SMA.json"
+  rsi: "data/raw/RSI.json"
+  obv: "data/raw/OBV.json"
+  bbands: "data/raw/BBANDS.json"
+
+output_dataset: "data/processed/processed_dataset.csv"

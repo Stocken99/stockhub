@@ -33,7 +33,7 @@ class AlphaVantageClient:
 
         # optional rate-limit handling
         if "Note" in data:
-            print("⚠️ RATE LIMIT:", data["Note"])
+            print("RATE LIMIT:", data["Note"])
         return data
 
 
