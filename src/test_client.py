@@ -1,4 +1,4 @@
-from .data.alpha_vantage_client import AlphaVantageClient
+from data.alpha_vantage_client import AlphaVantageClient
 import json
 
 def main():
