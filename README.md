@@ -54,9 +54,9 @@ After running the AutoGluon Chronos model on the processed dataset:
 
 **MLflow Screenshots:**  
 Here screenshots from MLFlow of model evaluation metrics
-![Predictions Plot](data\screenshots/mse.png)
-![MLflow Metrics](data\screenshots/metric1.png)
-![MLflow Metrics](data\screenshots/metric2.png)
+![Predictions Plot](data\images/mse.png)
+![MLflow Metrics](data\images/metric1.png)
+![MLflow Metrics](data\images/metric2.png)
 
 ## 4. Build / Running Instructions
 ### Using Docker
