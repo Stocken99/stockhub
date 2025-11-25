@@ -1,4 +1,4 @@
-from .data.alpha_vantage_client import AlphaVantageClient
+from ..data.alpha_vantage_client import AlphaVantageClient
 import json
 
 def main():
@@ -12,7 +12,7 @@ def main():
     data = client.fetch(
         "NEWS_SENTIMENT",
         ticker="AAPL",
-        time_from="20250101T0000",
+        time_from="19990101T0000",
         time_to="20250102T0000"
     )
     print(json.dumps(data, indent=4)[:500])

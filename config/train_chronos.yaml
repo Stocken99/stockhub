@@ -1,0 +1,14 @@
+data:
+  processed_csv: "data/processed/processed_dataset.csv"
+
+params:
+  prediction_length: 30
+  freq: "1D"
+
+mlflow:
+  uri: "http://mlflow:5000"
+  experiment: "Chronos_Experiment"
+
+outputs:
+  prediction_csv: "data/processed/predictions.csv"
+
