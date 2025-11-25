@@ -17,17 +17,52 @@ Our project aims to address this real-world problem by offering an AI-assisted p
 
 This application will democratize access to advanced financial insights that many non-professional investor might not have available. Users will recieve transparent, data-driven, trustworthy recommendations, in one of the most complex and unpredictable domains.
 
+
+
 ## 2. Pre-trained Model / Method
-We will use two different kinds of models, an LSTM and Cronos-2 model. An LSTM is a type of recurrent neural network or RNN designed to mitigate the vanishing gradient problem. The main advantage of the LSTM is the low requirements of computing power to train it. The Cronos-2 model is a state-of-the-art 120M-parameter, encoder-only time series foundation model specialized for zero-shot forecasting. It is a pre-trained model trained on a combination of real-world and synthetic data. The model used in the final product will be the one that achieves the highest result during the development of the application.
+We are using the **AutoGluon Chronos** time series model for forecasting stock prices. 
 
-Cronos-2 model: [amazon/chronos-2 · Hugging Face](https://huggingface.co/amazon/chronos-2)
-## 3. Dataset
+- **Inputs / Features**: Historical stock prices (Open, High, Low, Close), SMA, RSI, OBV, Bollinger Bands, and news sentiment scores.  
+- **Target Variable**: Closing price (`4. close`).  
+- **Metrics**: RMSE (Root Mean Squared Error), squared error per time step.  
 
-We are planning to use the API provided by Alpha Vantage to collect our datasets. The main data we will utilize from this site is the time series of different stocks with a daily granularity with the corresponding technical indicators provided such as SMA, RSI, with others. The other main type of data we will fetch from this site is the news of different stocks.
+The model is trained using a preprocessed dataset combining price history, technical indicators, and news sentiment. Hyperparameters like number of layers, hidden size, dropout, learning rate, and batch size can be tuned to improve performance.
 
-https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&apikey=demo
+## 3. Experiment and Dataset
 
-The above is an example of a query to fetch the daily time series data for the IBM stock with the demo API-key.
+We fetch data from **Alpha Vantage API**, including:
 
+- Daily stock time series data for selected tickers  
+- Technical indicators: SMA, RSI, OBV, Bollinger Bands  
+- News and sentiment scores  
 
-[Alpha Vantage Documentation](https://www.alphavantage.co/documentation/)
+The data is processed by:
+
+1. Merging price history, technical indicators, and news sentiment into one dataset  
+2. Sorting by date  
+3. Forward-filling missing values  
+
+The final dataset is saved as `data/processed/processed_dataset.csv` and used to train the AutoGluon Chronos model.
+
+### Initial Experiment Results
+After running the AutoGluon Chronos model on the processed dataset:
+
+- The model predicts the closing price (`4. close`) with reasonable accuracy.  
+- The `mean` column shows the predicted price, and columns `0.1`–`0.9` represent prediction intervals. The actual prices mostly fall within these intervals.  
+- Predictions capture short-term trends in the stock price.  
+- All predictions are saved to `data/processed/predictions.csv` for further analysis.  
+
+**MLflow Screenshots:**  
+Here screenshots from MLFlow of model evaluation metrics
+![MLflow Metrics](data/images/mse.png)
+![MLflow Metrics](data/images/metric2.png)
+![MLflow Metrics](data/images/metric1.png)
+
+## 4. Build / Running Instructions
+### Using Docker
+# Build and start all services
+docker-compose up --build
+
+## 5. Initial Ideas for Model Deployment and Inference Serving
+
+A web interface could let users select stock tickers and view predicted prices along with confidence intervals. This provides an easy way to explore forecasts and trends. Frameworks like **Streamlit** could be used to build this interactive frontend.
