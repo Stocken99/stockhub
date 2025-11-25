@@ -215,8 +215,6 @@ mlflow.db
 minio_data/
 
 # model data
-data/
-models/
 
 # Docker
 .docker/
