@@ -57,6 +57,7 @@ def train_chronos(processed_csv_path=None, config_path="config/train_chronos.yam
             path="models/chronos_model/",
             freq=freq
         )
+        
 
         predictor.fit(
             train_df,
