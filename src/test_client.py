@@ -1,12 +1,14 @@
 from data.alpha_vantage_client import AlphaVantageClient
 import json
-
+import pandas as pd 
 def main():
     client = AlphaVantageClient(config_path="config/alpha_vantage.yaml")
-    
+    ticker = "AAPL"
     print("Testing TIME_SERIES_DAILY...")
-    data = client.fetch("TIME_SERIES_DAILY", ticker="AAPL")
+    data = client.fetch("TIME_SERIES_DAILY", ticker=ticker, outputsize="compact")
     print(json.dumps(data, indent=4)[:500]) #Printa första 500
+#    df = pd.DataFrame.from_dict(data["Time Series (Daily)"], orient="index")
+#    df.to_csv(f"{ticker}_timeseries.csv")
 
     print("\nTesting NEWS_SENTIMENT...")
     data = client.fetch(
