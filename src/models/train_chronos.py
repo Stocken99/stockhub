@@ -3,7 +3,7 @@ import mlflow
 import os
 from autogluon.timeseries import TimeSeriesPredictor
 import yaml
-
+import numpy as np
 # ----------------------------------
 # Load config
 # ----------------------------------
@@ -100,9 +100,23 @@ def train_chronos(processed_csv_path=None, config_path="config/train_chronos.yam
             how="left"
         )
 
+        # metrics and log it to mlflow
+
         merged["sq_error"] = (merged["mean"] - merged["target"]) ** 2
         mse = merged["sq_error"].mean()
+        mae = float((merged["mean"] - merged["target"]).abs().mean())
+        rmse = np.sqrt(mse)
+        mae = np.mean(np.abs(merged["mean"] - merged["target"]))
+
+        print("Evaluation Metrics:")
+        print(f"  MAE  : {mae:.6f}")
+        print(f"  RMSE : {rmse:.6f}")
+        print(f"  MSE  : {mse:.6f}")
+
+
         mlflow.log_metric("mse", mse)
+        mlflow.log_metric("rmse", rmse)
+        mlflow.log_metric("mae", mae)
 
         out_path = cfg["outputs"]["prediction_csv"]
         os.makedirs(os.path.dirname(out_path), exist_ok=True)
@@ -128,7 +142,7 @@ def train_chronos(processed_csv_path=None, config_path="config/train_chronos.yam
 
         print("Model registered as 'chronos_model'")
 
-        return {"mse": mse}, out_path
+        return {"mse": mse, "rmse": rmse, "mae": mae}, out_path
 
 
 if __name__ == "__main__":
