@@ -1,9 +1,11 @@
+# src/models/train_chronos.py
+
 import pandas as pd
-import mlflow
 import os
 from autogluon.timeseries import TimeSeriesPredictor
 import yaml
 import numpy as np
+
 # ----------------------------------
 # Load config
 # ----------------------------------
@@ -30,122 +32,64 @@ def prepare_data(csv_path, prediction_length):
     return train_df, test_df
 
 # ----------------------------------
-# MLflow pyfunc wrapper
+# Training function (NO MLFLOW)
 # ----------------------------------
-class ChronosMLflowWrapper(mlflow.pyfunc.PythonModel):
-    def load_context(self, context):
-        import autogluon.timeseries as agts
-        self.model = agts.TimeSeriesPredictor.load(
-            context.artifacts["chronos_model"]
-        )
+def train_chronos_model(cfg, processed_csv_path=None):
 
-    def predict(self, context, model_input):
-        return self.model.predict(model_input)
-
-# ----------------------------------
-# Training function
-# ----------------------------------
-def train_chronos(processed_csv_path=None, config_path="config/train_chronos.yaml"):
-
-    cfg = load_config(config_path)
     freq = cfg["params"].get("freq", "1D")
 
     if processed_csv_path is not None:
         cfg["data"]["processed_csv"] = processed_csv_path
 
-    # MLflow setup
-    mlflow.set_tracking_uri(cfg["mlflow"]["uri"])
-    mlflow.set_experiment(cfg["mlflow"]["experiment"])
+    # Load dataset
+    train_df, test_df = prepare_data(
+        cfg["data"]["processed_csv"],
+        cfg["params"]["prediction_length"]
+    )
 
-    with mlflow.start_run() as run:
+    # Ensure output folder exists
+    model_dir = "models/chronos_model/"
+    os.makedirs(model_dir, exist_ok=True)
 
-        mlflow.log_params(cfg["params"])
+    # Create predictor
+    predictor = TimeSeriesPredictor(
+        prediction_length=cfg["params"]["prediction_length"],
+        target="target",
+        eval_metric="RMSE",
+        path=model_dir,
+        freq=freq
+    )
 
-        # Load dataset
-        train_df, test_df = prepare_data(
-            cfg["data"]["processed_csv"],
-            cfg["params"]["prediction_length"]
-        )
+    predictor.fit(train_df, hyperparameters={"Chronos": {}})
+    predictor.save()
 
-        # Ensure output folder exists
-        model_dir = "models/chronos_model/"
-        os.makedirs(model_dir, exist_ok=True)
+    # Predict for evaluation
+    predictions = predictor.predict(train_df)
 
-        # Create predictor
-        predictor = TimeSeriesPredictor(
-            prediction_length=cfg["params"]["prediction_length"],
-            target="target",
-            eval_metric="RMSE",
-            path=model_dir,
-            freq=freq
-        )
+    merged = predictions.merge(
+        test_df[["timestamp", "target", "item_id"]],
+        on=["timestamp", "item_id"],
+        how="left"
+    )
 
-        # ------------------------------
-     
-        # ------------------------------
-        predictor.fit(
-            train_df,
-            hyperparameters={"Chronos": {}}
-        )
+    # Compute metrics
+    merged["sq_error"] = (merged["mean"] - merged["target"]) ** 2
+    mse = merged["sq_error"].mean()
+    mae = (merged["mean"] - merged["target"]).abs().mean()
+    rmse = np.sqrt(mse)
 
-        # Ensure the model is saved
-        predictor.save()
+    out_path = cfg["outputs"]["prediction_csv"]
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    merged.to_csv(out_path, index=False)
 
-        # Predict
-        predictions = predictor.predict(train_df)
+    print("Training finished. MSE:", mse)
+    print("RMSE:", rmse)
+    print("MAE:", mae)
+    
 
-        merged = predictions.merge(
-            test_df[["timestamp", "target", "item_id"]],
-            on=["timestamp", "item_id"],
-            how="left"
-        )
+    metrics = {"mse": mse, "rmse": rmse, "mae": mae}
 
-        # metrics and log it to mlflow
+    return metrics, out_path, model_dir
 
-        merged["sq_error"] = (merged["mean"] - merged["target"]) ** 2
-        mse = merged["sq_error"].mean()
-        mae = float((merged["mean"] - merged["target"]).abs().mean())
-        rmse = np.sqrt(mse)
-        mae = np.mean(np.abs(merged["mean"] - merged["target"]))
-
-        print("Evaluation Metrics:")
-        print(f"  MAE  : {mae:.6f}")
-        print(f"  RMSE : {rmse:.6f}")
-        print(f"  MSE  : {mse:.6f}")
-
-
-        mlflow.log_metric("mse", mse)
-        mlflow.log_metric("rmse", rmse)
-        mlflow.log_metric("mae", mae)
-
-        out_path = cfg["outputs"]["prediction_csv"]
-        os.makedirs(os.path.dirname(out_path), exist_ok=True)
-        merged.to_csv(out_path, index=False)
-        mlflow.log_artifact(out_path)
-
-        print("Training finished. MSE:", mse)
-
-        # --------------------------------------
-        # Log model into MLflow
-        # --------------------------------------
-        mlflow_pyfunc_path = "chronos_model"
-
-        mlflow.pyfunc.log_model(
-            artifact_path=mlflow_pyfunc_path,
-            python_model=ChronosMLflowWrapper(),
-            artifacts={"chronos_model": model_dir},
-        )
-
-        # Register model into the MLflow Model Registry
-        model_uri = f"runs:/{run.info.run_id}/{mlflow_pyfunc_path}"
-        mlflow.register_model(model_uri, "chronos_model")
-
-        print("Model registered as 'chronos_model'")
-
-        return {"mse": mse, "rmse": rmse, "mae": mae}, out_path
-
-
-if __name__ == "__main__":
-    train_chronos()
 
 
