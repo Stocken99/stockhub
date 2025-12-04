@@ -1,6 +1,6 @@
 import mlflow
 from src.preprocessing.preprocess_data import preprocess
-from src.models.train_chronos import train_chronos
+from src.mlflow.run_mlflow import train_chronos_with_mlflow
 
 
 def main():
@@ -13,7 +13,7 @@ def main():
 
     # 2. Training + MLflow
     print("Connecting to MLflow...")
-    metrics, artifact_path = train_chronos(processed_path)
+    metrics, artifact_path = train_chronos_with_mlflow(processed_path)
 
     print("Pipeline Finished!")
     print("Metrics:", metrics)
